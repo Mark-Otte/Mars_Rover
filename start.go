@@ -38,33 +38,37 @@ func main() {
 	}
 	
 	SetGrid(input)
-	
-	fmt.Print("Enter Rover location and move set ((x, y, Bearing) LFRFF): ")
-	// ReadString will block until the delimiter is entered
-	input2, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("An error occured while reading input. Please try again", err)
-		return
-	}
-	
-	slice := []string{}
-	slice = GetRoverData(input2, slice)
-	
-	var loc Location
-	loc = SetLocation(slice)
-	
-	var rover Rover
-	if(CheckRoverPos(loc) != true){
-		fmt.Println("Rover started outside of the grid.\nGrid(",Grid_M,", ",Grid_N,")\nRover(",loc.x,", ",loc.y,")")
-	} else {
-		rover.pos = loc
-		rover.moveSet = slice[3]
-		rover.lost = false
-		rover = MoveRover(rover)
-		if (rover.lost == true) {
-			fmt.Println("(",rover.pos,") LOST")
+
+	for {
+		fmt.Print("Type Exit to quit or Enter Rover location and move set ((x, y, Bearing) LFRFF): ")
+		// ReadString will block until the delimiter is entered
+		input2, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("An error occured while reading input. Please try again", err)
+			return
+		}
+		if (strings.ToUpper(input2) == "EXIT"){
+			break
+		}
+		slice := []string{}
+		slice = GetRoverData(input2, slice)
+		
+		var loc Location
+		loc = SetLocation(slice)
+		
+		var rover Rover
+		if(CheckRoverPos(loc) != true){
+			fmt.Println("Rover started outside of the grid.\nGrid(",Grid_M,", ",Grid_N,")\nRover(",loc.x,", ",loc.y,")")
 		} else {
-			fmt.Println("(",rover.pos,")")
+			rover.pos = loc
+			rover.moveSet = slice[3]
+			rover.lost = false
+			rover = MoveRover(rover)
+			if (rover.lost == true) {
+				fmt.Println("(",rover.pos,") LOST")
+			} else {
+				fmt.Println("(",rover.pos,")")
+			}
 		}
 	}
 }
